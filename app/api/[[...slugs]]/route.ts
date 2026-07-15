@@ -23,7 +23,7 @@ const betterAuth = new Elysia({ name: "better-auth" })
 
 export const app = new Elysia({ prefix: "/api" })
   .use(betterAuth)
-  .get("/", "Hello Nextjs")
+  .get("/", { hello: "Hello Nextjs" })
   .get("/user", ({ user }) => user, {
     auth: true,
   })
