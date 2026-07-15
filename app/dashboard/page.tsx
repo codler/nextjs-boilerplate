@@ -1,15 +1,29 @@
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
-import { redirect } from "next/navigation"
+"use client"
 
-export default async function DashboardPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+import { Button } from "@/components/ui/button"
+import { authClient } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
 
-  if (!session) {
-    redirect("/sign-in")
+export default function DashboardPage() {
+  const router = useRouter()
+  const { data: session } = authClient.useSession()
+
+  const onLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login") // redirect to login page
+        },
+      },
+    })
   }
 
-  return <h1>Welcome {session.user.name}</h1>
+  return (
+    <>
+      <h1>Welcome {session?.user.name}</h1>
+      <Button className="bg-neutral-700" onClick={onLogout}>
+        Logout
+      </Button>
+    </>
+  )
 }
