@@ -1,15 +1,9 @@
 import { betterAuth } from "better-auth"
 import { nextCookies } from "better-auth/next-js"
-import { Pool } from "pg"
+import { db } from "./db"
 
 export const auth = betterAuth({
-  database: new Pool({
-    host: process.env.PG_HOST,
-    port: Number(process.env.PG_PORT),
-    user: process.env.PG_USER,
-    password: process.env.PG_PASSWORD,
-    database: process.env.PG_DATABASE,
-  }),
+  database: db,
   emailAndPassword: {
     enabled: true,
   },
