@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { NextIntlClientProvider } from "next-intl"
 import { cn } from "@/lib/utils"
 import Providers from "../components/providers"
+import { Metadata } from "next"
+import { createMetadata } from "@/lib/metadata"
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -12,6 +14,8 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = createMetadata();
 
 export default function RootLayout({
   children,
