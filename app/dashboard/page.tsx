@@ -3,14 +3,15 @@
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
 import { todos } from "@/lib/eden"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 
 export default function DashboardPage() {
   const router = useRouter()
   const { data: session } = authClient.useSession()
+  const queryClient = useQueryClient()
 
-  const { data, refetch } = useSuspenseQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["todos"],
     queryFn: async () => {
       const data = (await todos.get()).data
@@ -34,7 +35,9 @@ export default function DashboardPage() {
     const formData = new FormData(form)
     await todos.post({ text: formData.get("text") as string })
 
-    await refetch()
+    await queryClient.invalidateQueries({
+      queryKey: ["todos"],
+    })
   }
 
   const handleToggleTodo: React.SubmitEventHandler = async (event) => {
@@ -43,7 +46,9 @@ export default function DashboardPage() {
     const formData = new FormData(form)
     await todos.toggle({ id: formData.get("id") as string }).patch()
 
-    await refetch()
+    await queryClient.invalidateQueries({
+      queryKey: ["todos"],
+    })
   }
 
   const handleDeleteTodo: React.SubmitEventHandler = async (event) => {
@@ -52,7 +57,9 @@ export default function DashboardPage() {
     const formData = new FormData(form)
     await todos({ id: formData.get("id") as string }).delete()
 
-    await refetch()
+    await queryClient.invalidateQueries({
+      queryKey: ["todos"],
+    })
   }
 
   return (
