@@ -2,29 +2,19 @@
 
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
-import { api } from "@/lib/api"
+import { todosQueryKey, useTodosQuery } from "@/hooks/useTodosQuery"
 import { toast } from "sonner"
+import { api } from "@/lib/api"
 
 export default function DashboardPage() {
   const router = useRouter()
   const t = useTranslations("DashboardPage")
   const { data: session } = authClient.useSession()
   const queryClient = useQueryClient()
-
-  const { data } = useSuspenseQuery({
-    queryKey: ["todos"],
-    queryFn: async () => {
-      const data = (await api.todos.get()).data
-      return data ?? []
-    },
-  })
+  const { data } = useTodosQuery()
 
   const createMutation = useMutation({
     mutationFn: async (text: string) => {
@@ -33,7 +23,8 @@ export default function DashboardPage() {
         toast.error("Error")
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["todos"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: todosQueryKey() }),
   })
 
   const toggleMutation = useMutation({
@@ -43,7 +34,8 @@ export default function DashboardPage() {
         toast.error("Error")
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["todos"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: todosQueryKey() }),
   })
 
   const deleteMutation = useMutation({
@@ -53,7 +45,8 @@ export default function DashboardPage() {
         toast.error("Error")
       }
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["todos"] }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: todosQueryKey() }),
   })
 
   const onLogout = async () => {
@@ -144,7 +137,7 @@ export default function DashboardPage() {
                 name="text"
                 aria-label={t("addTodo")}
                 placeholder={t("addTodoPlaceholder")}
-                className="min-h-[3rem] flex-1 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-950 transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-sky-400 dark:focus:ring-sky-300/20"
+                className="min-h-12 flex-1 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-950 transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-sky-400 dark:focus:ring-sky-300/20"
               />
               <Button type="submit" disabled={createMutation.isPending}>
                 {createMutation.isPending ? t("adding") : t("addTodo")}

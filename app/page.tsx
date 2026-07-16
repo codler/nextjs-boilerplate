@@ -3,20 +3,12 @@
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
-import { useSuspenseQuery } from "@tanstack/react-query"
-import { api } from "@/lib/api"
+import { usePublicTodosCountQuery } from "@/hooks/usePublicTodosCountQuery"
 
 export default function Page() {
   const t = useTranslations("HomePage")
   const router = useRouter()
-  const { data } = useSuspenseQuery({
-    queryKey: ["todos", "public"],
-    queryFn: async () => {
-      const data = (await api.public.todos.count.get()).data
-      return data?.total ?? 0
-    },
-  })
-  const totalTasks = data
+  const { data: totalTasks } = usePublicTodosCountQuery()
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-144px)] max-w-7xl flex-col gap-16 px-6 py-16 lg:px-10">
@@ -43,7 +35,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="rounded-[2rem] bg-gradient-to-br from-slate-900 to-slate-700 p-1 shadow-2xl shadow-slate-900/10 dark:shadow-black/50">
+        <div className="rounded-[2rem] bg-linear-to-br from-slate-900 to-slate-700 p-1 shadow-2xl shadow-slate-900/10 dark:shadow-black/50">
           <div className="rounded-[1.75rem] bg-white p-8 dark:bg-slate-950">
             <div className="flex items-center justify-between gap-4 rounded-3xl bg-slate-100 px-5 py-4 dark:bg-slate-900">
               <div>
