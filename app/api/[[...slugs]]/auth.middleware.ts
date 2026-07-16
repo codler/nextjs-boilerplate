@@ -1,8 +1,7 @@
 import { auth } from "@/server-config/auth"
 import Elysia from "elysia"
 
-// user middleware (compute user and session and pass to routes)
-export const betterAuth = new Elysia({ name: "better-auth" })
+export const authMiddleware = new Elysia({ name: "better-auth" })
   .mount(auth.handler)
   .macro({
     auth: {

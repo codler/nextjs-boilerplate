@@ -1,19 +1,11 @@
 import { Elysia, t } from "elysia"
 import { and, desc, eq, sql } from "drizzle-orm"
-import { betterAuth } from "../../auth.elysia"
+import { authMiddleware } from "./auth.middleware"
 import { db } from "@/server-config/db"
 import { todo } from "@/db/todo.schema"
 
-export interface Todo {
-  id: string
-  text: string
-  completed: boolean
-  createdAt: Date
-  userId: string
-}
-
-export const app = new Elysia({ prefix: "/api/todos" })
-  .use(betterAuth)
+export const todosElysia = new Elysia({ prefix: "/todos" })
+  .use(authMiddleware)
 
   .get(
     "/",
@@ -23,17 +15,6 @@ export const app = new Elysia({ prefix: "/api/todos" })
       return rows
     },
     { auth: true }
-  )
-
-  .get(
-    "/public",
-    async () => {
-      const [{ total }] = await db
-        .select({ total: sql<number>`COUNT(*)` })
-        .from(todo)
-
-      return { total }
-    }
   )
 
   .get(
@@ -83,7 +64,6 @@ export const app = new Elysia({ prefix: "/api/todos" })
     { auth: true }
   )
 
-  // Delete
   .delete(
     "/:id",
     async ({ params, user }) => {
@@ -95,9 +75,3 @@ export const app = new Elysia({ prefix: "/api/todos" })
     },
     { auth: true }
   )
-
-export const GET = app.fetch
-export const POST = app.fetch
-export const PATCH = app.fetch
-export const DELETE = app.fetch
-export type TodoElysia = typeof app

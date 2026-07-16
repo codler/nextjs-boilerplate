@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
-import { todos } from "@/lib/eden"
 import {
   useMutation,
   useQueryClient,
@@ -10,6 +9,8 @@ import {
 } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
+import { api } from "@/lib/api"
+import { toast } from "sonner"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -20,28 +21,37 @@ export default function DashboardPage() {
   const { data } = useSuspenseQuery({
     queryKey: ["todos"],
     queryFn: async () => {
-      const data = (await todos.get()).data
+      const data = (await api.todos.get()).data
       return data ?? []
     },
   })
 
   const createMutation = useMutation({
     mutationFn: async (text: string) => {
-      await todos.post({ text })
+      const { error } = await api.todos.post({ text })
+      if (error) {
+        toast.error("Error")
+      }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["todos"] }),
   })
 
   const toggleMutation = useMutation({
     mutationFn: async (id: string) => {
-      await todos.toggle({ id }).patch()
+      const { error } = await api.todos.toggle({ id }).patch()
+      if (error) {
+        toast.error("Error")
+      }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["todos"] }),
   })
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await todos({ id }).delete()
+      const { error } = await api.todos({ id }).delete()
+      if (error) {
+        toast.error("Error")
+      }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["todos"] }),
   })

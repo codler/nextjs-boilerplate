@@ -19,6 +19,7 @@ export const metadata: Metadata = createMetadata()
 
 import SiteFooter from "@/components/site-footer"
 import SiteHeader from "@/components/site-header"
+import { Toaster } from "@/components/ui/sonner"
 
 export default function RootLayout({
   children,
@@ -43,6 +44,7 @@ export default function RootLayout({
               <SiteHeader />
               <main>{children}</main>
               <SiteFooter />
+              <Toaster expand closeButton richColors duration={8000} />
             </ThemeProvider>
           </NextIntlClientProvider>
         </Providers>

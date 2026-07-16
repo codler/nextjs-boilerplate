@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { todos } from "@/lib/eden"
+import { api } from "@/lib/api"
 
 export default function Page() {
   const t = useTranslations("HomePage")
@@ -12,7 +12,7 @@ export default function Page() {
   const { data } = useSuspenseQuery({
     queryKey: ["todos", "public"],
     queryFn: async () => {
-      const data = (await todos.public.get()).data
+      const data = (await api.public.todos.count.get()).data
       return data?.total ?? 0
     },
   })
