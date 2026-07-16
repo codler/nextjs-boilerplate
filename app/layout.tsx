@@ -17,6 +17,9 @@ const fontMono = Geist_Mono({
 
 export const metadata: Metadata = createMetadata();
 
+import SiteFooter from "@/components/site-footer"
+import SiteHeader from "@/components/site-header"
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,10 +36,14 @@ export default function RootLayout({
         nunitoSans.variable
       )}
     >
-      <body>
+      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
         <Providers>
           <NextIntlClientProvider>
-            <ThemeProvider>{children}</ThemeProvider>
+            <ThemeProvider>
+              <SiteHeader />
+              <main>{children}</main>
+              <SiteFooter />
+            </ThemeProvider>
           </NextIntlClientProvider>
         </Providers>
       </body>
