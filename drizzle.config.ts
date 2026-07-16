@@ -1,5 +1,5 @@
 import { defineConfig } from "drizzle-kit"
-import { dbCredentials } from "./lib/db"
+import { dbCredentials } from "./lib-server/db"
 
 export default defineConfig({
   dialect: "postgresql",

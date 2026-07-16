@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth"
+import { auth } from "@/lib-server/auth"
 import Elysia from "elysia"
 
 // user middleware (compute user and session and pass to routes)
