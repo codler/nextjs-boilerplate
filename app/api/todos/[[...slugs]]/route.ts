@@ -1,6 +1,8 @@
 import { Elysia, t } from "elysia"
+import { and, desc, eq, sql } from "drizzle-orm"
 import { betterAuth } from "../../auth.elysia"
 import { db } from "@/lib/db"
+import { todo } from "@/drizzle/todo.schema"
 
 export interface Todo {
   id: string
@@ -16,13 +18,7 @@ export const app = new Elysia({ prefix: "/api/todos" })
   .get(
     "/",
     async () => {
-      const { rows } = await db.query<Todo>(
-        `
-      SELECT *
-      FROM todos
-      ORDER BY "createdAt" DESC
-      `
-      )
+      const rows = await db.select().from(todo).orderBy(desc(todo.createdAt))
 
       return rows
     },
@@ -32,16 +28,11 @@ export const app = new Elysia({ prefix: "/api/todos" })
   .get(
     "/:id",
     async ({ params, user }) => {
-      const { rows } = await db.query<Todo>(
-        `
-      SELECT *
-      FROM todos
-      WHERE "userId" = $1
-        AND id = $2
-      ORDER BY "createdAt" DESC
-      `,
-        [user.id, params.id]
-      )
+      const rows = await db
+        .select()
+        .from(todo)
+        .where(and(eq(todo.userId, user.id), eq(todo.id, params.id)))
+        .orderBy(desc(todo.createdAt))
 
       return rows
     },
@@ -51,16 +42,12 @@ export const app = new Elysia({ prefix: "/api/todos" })
   .post(
     "/",
     async ({ body, user }) => {
-      const { rows } = await db.query<Todo>(
-        `
-        INSERT INTO todos (text, "userId")
-        VALUES ($1, $2)
-        RETURNING *
-        `,
-        [body.text, user.id]
-      )
+      const [inserted] = await db
+        .insert(todo)
+        .values({ text: body.text, userId: user.id })
+        .returning()
 
-      return rows[0]
+      return inserted
     },
     {
       auth: true,
@@ -74,18 +61,13 @@ export const app = new Elysia({ prefix: "/api/todos" })
   .patch(
     "/toggle/:id",
     async ({ params, user }) => {
-      const { rows } = await db.query<Todo>(
-        `
-      UPDATE todos
-      SET completed = NOT completed
-      WHERE "userId" = $1 
-        AND id = $2
-      RETURNING *
-      `,
-        [user.id, params.id]
-      )
+      const [updated] = await db
+        .update(todo)
+        .set({ completed: sql`NOT ${todo.completed}` })
+        .where(and(eq(todo.userId, user.id), eq(todo.id, params.id)))
+        .returning()
 
-      return rows[0]
+      return updated
     },
     { auth: true }
   )
@@ -94,10 +76,9 @@ export const app = new Elysia({ prefix: "/api/todos" })
   .delete(
     "/:id",
     async ({ params, user }) => {
-      await db.query(`DELETE FROM todos WHERE "userId" = $1 AND id = $2`, [
-        user.id,
-        params.id,
-      ])
+      await db
+        .delete(todo)
+        .where(and(eq(todo.userId, user.id), eq(todo.id, params.id)))
 
       return { success: true }
     },
