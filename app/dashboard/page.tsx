@@ -5,9 +5,11 @@ import { authClient } from "@/lib/auth-client"
 import { todos } from "@/lib/eden"
 import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 
 export default function DashboardPage() {
   const router = useRouter()
+  const t = useTranslations("DashboardPage")
   const { data: session } = authClient.useSession()
   const queryClient = useQueryClient()
 
@@ -67,25 +69,24 @@ export default function DashboardPage() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600 dark:text-sky-400">
-              Dashboard
+              {t("dashboardLabel")}
             </p>
             <h1 className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">
-              Welcome back,
-              <span className="text-slate-600 dark:text-slate-300"> {session?.user.name ?? "team member"}</span>
+              {t("welcomeBack", { name: session?.user.name ?? t("fallbackName") })}
             </h1>
           </div>
           <Button variant="outline" onClick={onLogout} size="sm">
-            Sign out
+            {t("signOut")}
           </Button>
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <div className="rounded-3xl bg-slate-50 p-6 dark:bg-slate-900">
-            <p className="text-sm text-slate-500 dark:text-slate-400">Total tasks</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{t("totalTasks")}</p>
             <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">{data.length}</p>
           </div>
           <div className="rounded-3xl bg-slate-50 p-6 dark:bg-slate-900">
-            <p className="text-sm text-slate-500 dark:text-slate-400">Completed</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{t("completed")}</p>
             <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">
               {data.filter((todo) => todo.completed).length}
             </p>
@@ -99,14 +100,14 @@ export default function DashboardPage() {
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-                  New task
+                  {t("newTaskTitle")}
                 </p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-                  Add a new todo and keep the team moving forward.
+                  {t("newTaskDescription")}
                 </p>
               </div>
               <div className="text-sm text-slate-500 dark:text-slate-400">
-                {createMutation.isPending ? "Saving..." : "Ready to create"}
+                {createMutation.isPending ? t("saving") : t("readyToCreate")}
               </div>
             </div>
 
@@ -114,12 +115,12 @@ export default function DashboardPage() {
               <input
                 type="text"
                 name="text"
-                aria-label="Add todo"
-                placeholder="What needs to be done?"
+                aria-label={t("addTodo")}
+                placeholder={t("addTodoPlaceholder")}
                 className="min-h-[3rem] flex-1 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-sky-400 dark:focus:ring-sky-300/20"
               />
               <Button type="submit" disabled={createMutation.isPending}>
-                {createMutation.isPending ? "Adding…" : "Add todo"}
+                {createMutation.isPending ? t("adding") : t("addTodo")}
               </Button>
             </form>
           </div>
@@ -128,21 +129,21 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
-                  Todo list
+                  {t("todoListTitle")}
                 </p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
-                  Manage tasks for your current sprint.
+                  {t("todoListDescription")}
                 </p>
               </div>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-700 dark:bg-slate-800 dark:text-slate-200">
-                {data.length} items
+                {t("todoCount", { count: data.length })}
               </span>
             </div>
 
             <div className="mt-6 space-y-4">
               {data.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
-                  No todos yet. Add your first task to get started.
+                  {t("noTodos")}
                 </div>
               ) : (
                 data.map((todo) => (
@@ -155,7 +156,7 @@ export default function DashboardPage() {
                         <p className={`text-base font-medium ${todo.completed ? "text-slate-400 line-through" : "text-slate-950 dark:text-white"}`}>
                           {todo.text}
                         </p>
-                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Owned by {todo.userId}</p>
+                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("ownedBy", { owner: todo.userId })}</p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <Button
@@ -164,7 +165,7 @@ export default function DashboardPage() {
                           onClick={async () => await toggleMutation.mutateAsync(todo.id)}
                           disabled={toggleMutation.isPending}
                         >
-                          {todo.completed ? "Mark active" : "Complete"}
+                          {todo.completed ? t("markActive") : t("complete")}
                         </Button>
                         <Button
                           size="sm"
@@ -172,7 +173,7 @@ export default function DashboardPage() {
                           onClick={async () => await deleteMutation.mutateAsync(todo.id)}
                           disabled={deleteMutation.isPending}
                         >
-                          Delete
+                          {t("delete")}
                         </Button>
                       </div>
                     </div>
@@ -185,17 +186,17 @@ export default function DashboardPage() {
 
         <aside className="space-y-6">
           <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <h2 className="text-base font-semibold text-slate-950 dark:text-white">Focus board</h2>
+            <h2 className="text-base font-semibold text-slate-950 dark:text-white">{t("focusBoardTitle")}</h2>
             <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
-              Keep the team aligned, prioritize the most important tasks, and clear your backlog quickly.
+              {t("focusBoardDescription")}
             </p>
           </div>
           <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <h2 className="text-base font-semibold text-slate-950 dark:text-white">Tips</h2>
+            <h2 className="text-base font-semibold text-slate-950 dark:text-white">{t("tipsTitle")}</h2>
             <ul className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-300">
-              <li>✔ Keep todo descriptions concise.</li>
-              <li>✔ Use complete/active to track progress.</li>
-              <li>✔ Logout when you&apos;re done.</li>
+              <li>✔ {t("tipOne")}</li>
+              <li>✔ {t("tipTwo")}</li>
+              <li>✔ {t("tipThree")}</li>
             </ul>
           </div>
         </aside>
