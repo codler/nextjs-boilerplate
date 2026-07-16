@@ -2,7 +2,7 @@ import { Elysia, t } from "elysia"
 import { and, desc, eq, sql } from "drizzle-orm"
 import { betterAuth } from "../../auth.elysia"
 import { db } from "@/lib-server/db"
-import { todo } from "@/drizzle/todo.schema"
+import { todo } from "@/db/todo.schema"
 
 export interface Todo {
   id: string
