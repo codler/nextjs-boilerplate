@@ -7,26 +7,68 @@ import sv from "../messages/sv.json"
 const messages = {
   en,
   sv,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-} as Readonly<Record<string, any>>
+} as const
+
+const supportedLocales = Object.keys(messages) as Array<keyof typeof messages>
+
+function getPreferredLocale(acceptLanguage?: string) {
+  if (!acceptLanguage) {
+    return undefined
+  }
+
+  return acceptLanguage
+    .split(",")
+    .map((part) => {
+      const [localePart, qPart] = part.trim().split(";")
+      const quality = qPart?.split("=")[1]
+      return {
+        locale: localePart.toLowerCase(),
+        quality: quality ? Number.parseFloat(quality) : 1,
+      }
+    })
+    .sort((a, b) => b.quality - a.quality)
+    .map(({ locale }) => locale)
+    .reduce<keyof typeof messages | undefined>((preferred, locale) => {
+      if (preferred) {
+        return preferred
+      }
+
+      const normalized = locale.replace("_", "-")
+      if (supportedLocales.includes(normalized as keyof typeof messages)) {
+        return normalized as keyof typeof messages
+      }
+
+      const primary = normalized.split("-")[0]
+      if (supportedLocales.includes(primary as keyof typeof messages)) {
+        return primary as keyof typeof messages
+      }
+
+      return undefined
+    }, undefined)
+}
 
 export default getRequestConfig(
   async ({ locale = "en" as keyof typeof messages }) => {
+    const requestHeaders = await headers()
+    const acceptLanguage = requestHeaders.get("accept-language") ?? undefined
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: requestHeaders,
     })
 
-    if (!session) {
+    const preferredLocale = getPreferredLocale(acceptLanguage)
+    if (preferredLocale) {
+      locale = preferredLocale
+    } else if (!session) {
       locale = "sv"
     }
 
-    if (!messages[locale]) {
+    if (!messages[locale as keyof typeof messages]) {
       locale = "en"
     }
 
     return {
       locale,
-      messages: messages[locale],
+      messages: messages[locale as keyof typeof messages],
     }
   }
 )
