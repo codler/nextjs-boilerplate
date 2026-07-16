@@ -24,6 +24,8 @@ This skill is designed to understand the repository structure, architecture, and
 - `app/api/todos/[[...slugs]]/route.ts` defines todo CRUD routes.
 - `app/api/[[...slugs]]/route.ts` defines general API routes.
 - `lib/eden.ts` exports typed API clients using `treaty` for server vs browser.
+  - On the server it dynamically imports the local Elysia app and uses its `.api` methods.
+  - In the browser it uses `process.env.NEXT_PUBLIC_API_URL` with the same typed app shape.
 
 ### Frontend flow
 - `lib/auth-client.ts` exports the client-side `authClient` from `better-auth/react`.
@@ -61,7 +63,7 @@ When asked to modify or extend the app, prefer:
 - App Router pages and route files under `app/`.
 - `db/` schema changes for data model updates.
 - `server-config/` for runtime auth and DB config.
-- `lib/eden.ts` for typed API access.
+- `lib/eden.ts` for typed API access, with `api` and `todos` clients based on the Elysia app shape.
 - `components/ui/` for shared UI primitives.
 - `components/providers.tsx` for shared provider behavior.
 

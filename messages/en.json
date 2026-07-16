@@ -14,6 +14,7 @@
     "ctaViewDemo": "View demo dashboard",
     "statusToday": "Today",
     "tasksReady": "9 tasks ready",
+    "tasksReadyCount": "{count} tasks ready",
     "activeLabel": "Active",
     "task1Title": "Finish pitch deck",
     "task1Tag": "Sales",

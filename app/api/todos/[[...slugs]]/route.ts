@@ -26,6 +26,17 @@ export const app = new Elysia({ prefix: "/api/todos" })
   )
 
   .get(
+    "/public",
+    async () => {
+      const [{ total }] = await db
+        .select({ total: sql<number>`COUNT(*)` })
+        .from(todo)
+
+      return { total }
+    }
+  )
+
+  .get(
     "/:id",
     async ({ params, user }) => {
       const rows = await db
