@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { authClient } from "@/lib/auth-client"
+import { authClient } from "@/lib/authClient"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"

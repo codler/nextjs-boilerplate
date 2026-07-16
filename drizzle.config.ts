@@ -4,7 +4,7 @@ import { dbCredentials } from "./server-config/db"
 export default defineConfig({
   dialect: "postgresql",
   schema: "./db/*.schema.ts",
-  out: "./db",
+  out: "./db/migrations",
   dbCredentials: {
     url: `postgresql://${dbCredentials.user}:${dbCredentials.password}@${dbCredentials.host}:${dbCredentials.port}/${dbCredentials.database}`,
   },

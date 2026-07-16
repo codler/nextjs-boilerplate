@@ -1,12 +1,15 @@
 import { Geist_Mono, Nunito_Sans } from "next/font/google"
 
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/themeProvider"
 import { NextIntlClientProvider } from "next-intl"
 import { cn } from "@/lib/utils"
 import Providers from "../components/providers"
 import { Metadata } from "next"
 import { createMetadata } from "@/lib/metadata"
+import SiteFooter from "@/components/siteFooter"
+import SiteHeader from "@/components/siteHeader"
+import { Toaster } from "@/components/ui/sonner"
 
 const nunitoSans = Nunito_Sans({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -16,10 +19,6 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = createMetadata()
-
-import SiteFooter from "@/components/site-footer"
-import SiteHeader from "@/components/site-header"
-import { Toaster } from "@/components/ui/sonner"
 
 export default function RootLayout({
   children,
