@@ -3,7 +3,11 @@
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/auth-client"
 import { todos } from "@/lib/eden"
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
 
@@ -52,7 +56,9 @@ export default function DashboardPage() {
     })
   }
 
-  const handleCreateTodo: React.SubmitEventHandler<HTMLFormElement> = async (event) => {
+  const handleCreateTodo: React.SubmitEventHandler<HTMLFormElement> = async (
+    event
+  ) => {
     event.preventDefault()
     const form = event.currentTarget
     const formData = new FormData(form)
@@ -68,11 +74,13 @@ export default function DashboardPage() {
       <div className="rounded-4xl border border-slate-200 bg-white p-8 shadow-xl shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-950 dark:shadow-black/20">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-sky-600 dark:text-sky-400">
+            <p className="text-sm font-semibold tracking-[0.24em] text-sky-600 uppercase dark:text-sky-400">
               {t("dashboardLabel")}
             </p>
             <h1 className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">
-              {t("welcomeBack", { name: session?.user.name ?? t("fallbackName") })}
+              {t("welcomeBack", {
+                name: session?.user.name ?? t("fallbackName"),
+              })}
             </h1>
           </div>
           <Button variant="outline" onClick={onLogout} size="sm">
@@ -82,11 +90,17 @@ export default function DashboardPage() {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2">
           <div className="rounded-3xl bg-slate-50 p-6 dark:bg-slate-900">
-            <p className="text-sm text-slate-500 dark:text-slate-400">{t("totalTasks")}</p>
-            <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">{data.length}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              {t("totalTasks")}
+            </p>
+            <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">
+              {data.length}
+            </p>
           </div>
           <div className="rounded-3xl bg-slate-50 p-6 dark:bg-slate-900">
-            <p className="text-sm text-slate-500 dark:text-slate-400">{t("completed")}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              {t("completed")}
+            </p>
             <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">
               {data.filter((todo) => todo.completed).length}
             </p>
@@ -99,7 +113,7 @@ export default function DashboardPage() {
           <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+                <p className="text-sm font-semibold tracking-[0.24em] text-slate-500 uppercase dark:text-slate-400">
                   {t("newTaskTitle")}
                 </p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
@@ -111,13 +125,16 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <form onSubmit={handleCreateTodo} className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <form
+              onSubmit={handleCreateTodo}
+              className="mt-6 flex flex-col gap-3 sm:flex-row"
+            >
               <input
                 type="text"
                 name="text"
                 aria-label={t("addTodo")}
                 placeholder={t("addTodoPlaceholder")}
-                className="min-h-[3rem] flex-1 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-sky-400 dark:focus:ring-sky-300/20"
+                className="min-h-[3rem] flex-1 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-950 transition outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-100 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-sky-400 dark:focus:ring-sky-300/20"
               />
               <Button type="submit" disabled={createMutation.isPending}>
                 {createMutation.isPending ? t("adding") : t("addTodo")}
@@ -128,14 +145,14 @@ export default function DashboardPage() {
           <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+                <p className="text-sm font-semibold tracking-[0.24em] text-slate-500 uppercase dark:text-slate-400">
                   {t("todoListTitle")}
                 </p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                   {t("todoListDescription")}
                 </p>
               </div>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold tracking-[0.24em] text-slate-700 uppercase dark:bg-slate-800 dark:text-slate-200">
                 {t("todoCount", { count: data.length })}
               </span>
             </div>
@@ -153,16 +170,22 @@ export default function DashboardPage() {
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <p className={`text-base font-medium ${todo.completed ? "text-slate-400 line-through" : "text-slate-950 dark:text-white"}`}>
+                        <p
+                          className={`text-base font-medium ${todo.completed ? "text-slate-400 line-through" : "text-slate-950 dark:text-white"}`}
+                        >
                           {todo.text}
                         </p>
-                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{t("ownedBy", { owner: todo.userId })}</p>
+                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                          {t("ownedBy", { owner: todo.userId })}
+                        </p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <Button
                           size="sm"
                           variant={todo.completed ? "outline" : "secondary"}
-                          onClick={async () => await toggleMutation.mutateAsync(todo.id)}
+                          onClick={async () =>
+                            await toggleMutation.mutateAsync(todo.id)
+                          }
                           disabled={toggleMutation.isPending}
                         >
                           {todo.completed ? t("markActive") : t("complete")}
@@ -170,7 +193,9 @@ export default function DashboardPage() {
                         <Button
                           size="sm"
                           variant="destructive"
-                          onClick={async () => await deleteMutation.mutateAsync(todo.id)}
+                          onClick={async () =>
+                            await deleteMutation.mutateAsync(todo.id)
+                          }
                           disabled={deleteMutation.isPending}
                         >
                           {t("delete")}
@@ -186,13 +211,17 @@ export default function DashboardPage() {
 
         <aside className="space-y-6">
           <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <h2 className="text-base font-semibold text-slate-950 dark:text-white">{t("focusBoardTitle")}</h2>
+            <h2 className="text-base font-semibold text-slate-950 dark:text-white">
+              {t("focusBoardTitle")}
+            </h2>
             <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
               {t("focusBoardDescription")}
             </p>
           </div>
           <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-            <h2 className="text-base font-semibold text-slate-950 dark:text-white">{t("tipsTitle")}</h2>
+            <h2 className="text-base font-semibold text-slate-950 dark:text-white">
+              {t("tipsTitle")}
+            </h2>
             <ul className="mt-4 space-y-3 text-sm text-slate-600 dark:text-slate-300">
               <li>✔ {t("tipOne")}</li>
               <li>✔ {t("tipTwo")}</li>

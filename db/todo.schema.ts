@@ -1,4 +1,6 @@
+import { relations } from "drizzle-orm"
 import { pgTable, uuid, text, boolean, timestamp } from "drizzle-orm/pg-core"
+import { user } from "./auth.schema"
 
 export const todo = pgTable("todo", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -10,5 +12,14 @@ export const todo = pgTable("todo", {
     .notNull()
     .defaultNow(),
 
-  userId: text("userId").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 })
+
+export const todoRelations = relations(todo, ({ one }) => ({
+  user: one(user, {
+    fields: [todo.userId],
+    references: [user.id],
+  }),
+}))

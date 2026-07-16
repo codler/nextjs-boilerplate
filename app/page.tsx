@@ -10,7 +10,7 @@ export default function Page() {
   const t = useTranslations("HomePage")
   const router = useRouter()
   const { data } = useSuspenseQuery({
-    queryKey: ["todos"],
+    queryKey: ["todos", "public"],
     queryFn: async () => {
       const data = (await todos.public.get()).data
       return data?.total ?? 0

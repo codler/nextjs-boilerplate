@@ -15,7 +15,7 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
-export const metadata: Metadata = createMetadata();
+export const metadata: Metadata = createMetadata()
 
 import SiteFooter from "@/components/site-footer"
 import SiteHeader from "@/components/site-header"
