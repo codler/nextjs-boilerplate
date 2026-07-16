@@ -1,7 +1,7 @@
 import { Elysia, t } from "elysia"
 import { and, desc, eq, sql } from "drizzle-orm"
 import { betterAuth } from "../../auth.elysia"
-import { db } from "@/lib-server/db"
+import { db } from "@/server-config/db"
 import { todo } from "@/db/todo.schema"
 
 export interface Todo {

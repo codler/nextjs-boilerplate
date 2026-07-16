@@ -1,4 +1,4 @@
-import { auth } from "@/lib-server/auth"
+import { auth } from "@/server-config/auth"
 import { getRequestConfig } from "next-intl/server"
 import { headers } from "next/headers"
 import en from "../messages/en.json"
