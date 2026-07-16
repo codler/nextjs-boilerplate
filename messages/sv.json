@@ -1,15 +1,15 @@
 {
   "Common": {
-    "siteName": "FlowDesk",
+    "siteName": "MySite",
     "login": "Logga in",
     "signUp": "Skapa konto",
-    "footerDescription": "FlowDesk — produktivitet byggd för snabba team.",
-    "copyright": "© {year} FlowDesk."
+    "footerDescription": "MySite — produktivitet byggd för snabba team.",
+    "copyright": "© {year} MySite."
   },
   "HomePage": {
     "heroBadge": "Byggt för snabba team",
     "heroTitle": "Hantera dina uppgifter, samarbeta direkt och håll ditt team synkat.",
-    "heroSubtitle": "FlowDesk erbjuder en polerad produktivitetsarbetsyta med realtids-todos, säker inloggning och en ren design som känns redo för lansering.",
+    "heroSubtitle": "MySite erbjuder en polerad produktivitetsarbetsyta med realtids-todos, säker inloggning och en ren design som känns redo för lansering.",
     "ctaStartFree": "Kom igång gratis",
     "ctaViewDemo": "Se demo dashboard",
     "statusToday": "Idag",
@@ -47,14 +47,14 @@
     "signingIn": "Loggar in…",
     "noAccount": "Har du inget konto?",
     "createOne": "Skapa ett",
-    "whyTitle": "Varför FlowDesk?",
+    "whyTitle": "Varför MySite?",
     "whyDescription": "Säkert, polerat och byggt för team som vill leverera snabbare. Dina uppgifter förblir synkade och din arbetsyta hålls ren.",
     "benefitAuth": "Pålitlig autentisering med sessionhantering",
     "benefitTodo": "Snabb todo-flöde för daglig planering",
     "benefitLaunch": "Designad för lanseringsklara produkter"
   },
   "SignUpPage": {
-    "pageTitle": "Skapa ditt FlowDesk-konto",
+    "pageTitle": "Skapa ditt MySite-konto",
     "pageSubtitle": "Börja hantera uppgifter, samarbeta med ditt team och lansera snabbare.",
     "benefit1": "Säker e-postregistrering med sessionsstöd",
     "benefit2": "En enkel väg till din dashboard",

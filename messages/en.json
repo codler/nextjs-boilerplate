@@ -1,15 +1,15 @@
 {
   "Common": {
-    "siteName": "FlowDesk",
+    "siteName": "MySite",
     "login": "Login",
     "signUp": "Sign up",
-    "footerDescription": "FlowDesk — productivity built for fast teams.",
-    "copyright": "© {year} FlowDesk."
+    "footerDescription": "MySite — productivity built for fast teams.",
+    "copyright": "© {year} MySite."
   },
   "HomePage": {
     "heroBadge": "Built for fast teams",
     "heroTitle": "Manage your tasks, collaborate instantly, and keep your team in sync.",
-    "heroSubtitle": "FlowDesk brings a polished productivity workspace with real-time todos, secure auth, and a clean interface that feels ready for launch.",
+    "heroSubtitle": "MySite brings a polished productivity workspace with real-time todos, secure auth, and a clean interface that feels ready for launch.",
     "ctaStartFree": "Start free",
     "ctaViewDemo": "View demo dashboard",
     "statusToday": "Today",
@@ -47,14 +47,14 @@
     "signingIn": "Signing in…",
     "noAccount": "Don't have an account?",
     "createOne": "Create one",
-    "whyTitle": "Why FlowDesk?",
+    "whyTitle": "Why MySite?",
     "whyDescription": "Secure, polished, and built for teams that want to ship faster. Your tasks stay synced and your workspace stays clean.",
     "benefitAuth": "Trusted auth with session management",
     "benefitTodo": "Fast todo workflow for daily planning",
     "benefitLaunch": "Designed for launch-ready products"
   },
   "SignUpPage": {
-    "pageTitle": "Create your FlowDesk account",
+    "pageTitle": "Create your MySite account",
     "pageSubtitle": "Start managing tasks, collaborating with your team, and launching faster.",
     "benefit1": "Safe email sign-up with session support",
     "benefit2": "A simple path to your dashboard",
