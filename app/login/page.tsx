@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/authClient"
 import { useMutation } from "@tanstack/react-query"
+import { RoutePath } from "@/constants/route"
 
 export default function Login() {
   const router = useRouter()
@@ -24,7 +25,7 @@ export default function Login() {
 
   useEffect(() => {
     if (session) {
-      router.replace("/dashboard")
+      router.replace(RoutePath.DASHBOARD)
     }
   }, [router, session])
 
@@ -42,7 +43,7 @@ export default function Login() {
       const { error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: "/dashboard",
+        callbackURL: RoutePath.DASHBOARD,
       })
 
       if (error) {
@@ -50,7 +51,7 @@ export default function Login() {
       }
     },
     onSuccess: () => {
-      router.push("/dashboard")
+      router.push(RoutePath.DASHBOARD)
     },
   })
 
@@ -67,7 +68,7 @@ export default function Login() {
       }
     },
     onSuccess: () => {
-      router.push("/dashboard")
+      router.push(RoutePath.DASHBOARD)
     },
   })
 
@@ -83,7 +84,7 @@ export default function Login() {
 
   const handleGuestLogin = async () => {
     if (session) {
-      router.push("/dashboard")
+      router.push(RoutePath.DASHBOARD)
       return
     }
 
@@ -155,7 +156,7 @@ export default function Login() {
             <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
               {t("noAccount")}{" "}
               <Link
-                href="/sign-up"
+                href={RoutePath.SIGN_UP}
                 className="font-medium text-slate-950 underline decoration-slate-400 underline-offset-4 dark:text-white"
               >
                 {t("createOne")}

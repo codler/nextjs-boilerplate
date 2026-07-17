@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label"
 import { authClient } from "@/lib/authClient"
 import { useMutation } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
+import { RoutePath } from "@/constants/route"
 
 export default function SignUp() {
   const router = useRouter()
@@ -54,7 +55,9 @@ export default function SignUp() {
     },
   })
 
-  const handleSignup: React.SubmitEventHandler<HTMLFormElement> = async (event) => {
+  const handleSignup: React.SubmitEventHandler<HTMLFormElement> = async (
+    event
+  ) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
     await mutateAsync(formData)
@@ -64,16 +67,14 @@ export default function SignUp() {
     <div className="mx-auto flex min-h-[calc(100vh-144px)] max-w-6xl items-center px-6 py-10 lg:px-10">
       <div className="grid w-full gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
         <div className="rounded-4xl bg-slate-900 px-8 py-10 text-white shadow-xl shadow-slate-900/30">
-          <h1 className="text-4xl font-semibold tracking-tight">{t("pageTitle")}</h1>
+          <h1 className="text-4xl font-semibold tracking-tight">
+            {t("pageTitle")}
+          </h1>
           <p className="mt-4 max-w-xl text-base leading-7 text-slate-300">
             {t("pageSubtitle")}
           </p>
           <div className="mt-8 space-y-5">
-            {[
-              t("benefit1"),
-              t("benefit2"),
-              t("benefit3"),
-            ].map((item) => (
+            {[t("benefit1"), t("benefit2"), t("benefit3")].map((item) => (
               <div key={item} className="rounded-3xl bg-slate-800/70 px-5 py-4">
                 <p className="text-sm text-slate-200">{item}</p>
               </div>
@@ -85,17 +86,21 @@ export default function SignUp() {
           {success ? (
             <div className="space-y-6 text-center">
               <div className="rounded-3xl bg-slate-100 p-8 dark:bg-slate-900">
-                <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">{t("successTitle")}</h2>
+                <h2 className="text-2xl font-semibold text-slate-950 dark:text-white">
+                  {t("successTitle")}
+                </h2>
                 <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
                   {t("successDescription")}
                 </p>
               </div>
-              <Button onClick={() => router.push("/login")}>{t("goToLogin")}</Button>
+              <Button onClick={() => router.push(RoutePath.LOGIN)}>
+                {t("goToLogin")}
+              </Button>
             </div>
           ) : (
             <>
               <div className="mb-6">
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+                <p className="text-sm font-semibold tracking-[0.24em] text-slate-500 uppercase dark:text-slate-400">
                   {t("formTitle")}
                 </p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
@@ -135,7 +140,9 @@ export default function SignUp() {
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="repeat-password">{t("confirmPasswordLabel")}</Label>
+                    <Label htmlFor="repeat-password">
+                      {t("confirmPasswordLabel")}
+                    </Label>
                     <Input
                       id="repeat-password"
                       name="repeatPassword"
@@ -153,8 +160,11 @@ export default function SignUp() {
                 </Button>
               </form>
               <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-                {t("alreadyHaveAccount")} {' '}
-                <Link href="/login" className="font-medium text-slate-950 underline decoration-slate-400 underline-offset-4 dark:text-white">
+                {t("alreadyHaveAccount")}{" "}
+                <Link
+                  href={RoutePath.LOGIN}
+                  className="font-medium text-slate-950 underline decoration-slate-400 underline-offset-4 dark:text-white"
+                >
                   {t("signIn")}
                 </Link>
               </p>

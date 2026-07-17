@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { useTranslations } from "next-intl"
 import { usePublicTodosCountQuery } from "@/hooks/usePublicTodosCountQuery"
+import { RoutePath } from "@/constants/route"
 
 export default function Page() {
   const t = useTranslations("HomePage")
@@ -26,10 +27,13 @@ export default function Page() {
             </p>
           </div>
           <div className="flex flex-wrap gap-4">
-            <Button onClick={() => router.push("/sign-up")}>
+            <Button onClick={() => router.push(RoutePath.SIGN_UP)}>
               {t("ctaStartFree")}
             </Button>
-            <Button variant="outline" onClick={() => router.push("/dashboard")}>
+            <Button
+              variant="outline"
+              onClick={() => router.push(RoutePath.DASHBOARD)}
+            >
               {t("ctaViewDemo")}
             </Button>
           </div>

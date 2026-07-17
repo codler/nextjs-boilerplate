@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl"
 import { todosQueryKey, useTodosQuery } from "@/hooks/useTodosQuery"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
+import { RoutePath } from "@/constants/route"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -55,19 +56,20 @@ export default function DashboardPage() {
     await authClient.signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/login")
+          router.push(RoutePath.LOGIN)
         },
       },
     })
   }
 
-  const { openConfirmDeleteDialog, confirmDeleteDialog } = useConfirmDeleteDialog({
-    title: t("confirmDeleteTitle"),
-    description: t("confirmDeleteDescription"),
-    confirmText: t("confirmDeleteAction"),
-    cancelText: t("confirmDeleteCancel"),
-    confirmButtonVariant: "destructive",
-  })
+  const { openConfirmDeleteDialog, confirmDeleteDialog } =
+    useConfirmDeleteDialog({
+      title: t("confirmDeleteTitle"),
+      description: t("confirmDeleteDescription"),
+      confirmText: t("confirmDeleteAction"),
+      cancelText: t("confirmDeleteCancel"),
+      confirmButtonVariant: "destructive",
+    })
 
   const handleCreateTodo: React.SubmitEventHandler<HTMLFormElement> = async (
     event
