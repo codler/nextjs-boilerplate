@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { useConfirmDeleteDialog } from "@/components/confirm-delete-alert-dialog"
 import { authClient } from "@/lib/authClient"
 import { getHttpErrorMessage } from "@/lib/error"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -59,6 +60,14 @@ export default function DashboardPage() {
       },
     })
   }
+
+  const { openConfirmDeleteDialog, confirmDeleteDialog } = useConfirmDeleteDialog({
+    title: t("confirmDeleteTitle"),
+    description: t("confirmDeleteDescription"),
+    confirmText: t("confirmDeleteAction"),
+    cancelText: t("confirmDeleteCancel"),
+    confirmButtonVariant: "destructive",
+  })
 
   const handleCreateTodo: React.SubmitEventHandler<HTMLFormElement> = async (
     event
@@ -197,8 +206,12 @@ export default function DashboardPage() {
                         <Button
                           size="sm"
                           variant="destructive"
-                          onClick={async () =>
-                            await deleteMutation.mutateAsync(todo.id)
+                          onClick={() =>
+                            openConfirmDeleteDialog({
+                              onConfirm: async () => {
+                                await deleteMutation.mutateAsync(todo.id)
+                              },
+                            })
                           }
                           disabled={deleteMutation.isPending}
                         >
@@ -234,6 +247,8 @@ export default function DashboardPage() {
           </div>
         </aside>
       </section>
+
+      {confirmDeleteDialog}
     </div>
   )
 }
