@@ -8,7 +8,7 @@ This skill is designed to understand the repository structure, architecture, and
 - `app/layout.tsx` is the global root layout.
 - `app/page.tsx`, `app/login/page.tsx`, `app/sign-up/page.tsx`, and `app/dashboard/page.tsx` are the main pages.
 - `app/api/` contains Elysia route handlers.
-- `server-config/` contains runtime infrastructure and auth configuration.
+- `backend/config/` contains runtime infrastructure and auth configuration.
 - `db/` contains Drizzle schema definitions.
 - `lib/` contains shared utilities and typed API client wrappers.
 - `components/` contains UI primitives and providers.
@@ -17,8 +17,8 @@ This skill is designed to understand the repository structure, architecture, and
 
 ### Data model and backend flow
 - `db/*.schema.ts` defines database tables with Drizzle.
-- `server-config/db.ts` exports the Postgres pool and Drizzle client.
-- `server-config/auth.ts` configures `better-auth` with `nextCookies`, the Drizzle adapter, and email/password auth.
+- `backend/config/db.ts` exports the Postgres pool and Drizzle client.
+- `backend/config/auth.ts` configures `better-auth` with `nextCookies`, the Drizzle adapter, and email/password auth.
 - `app/api/auth.elysia.ts` creates an Elysia plugin for authenticated routes.
 - `app/api/auth/[...all]/route.ts` exposes the `better-auth` Next.js handler.
 - `app/api/todos/[[...slugs]]/route.ts` defines todo CRUD routes.
@@ -41,7 +41,7 @@ This skill is designed to understand the repository structure, architecture, and
 - The repo currently has one middleware-like file (`proxy.ts`) that is not named `middleware.ts`.
 
 ### i18n and metadata
-- `server-config/i18n-request.ts` configures `next-intl` request-based locale loading.
+- `backend/config/i18n-request.ts` configures `next-intl` request-based locale loading.
 - `app/layout.tsx` wraps the app in `NextIntlClientProvider`.
 - `lib/metadata.ts` creates metadata with `metadataBase` from env.
 
@@ -49,20 +49,20 @@ This skill is designed to understand the repository structure, architecture, and
 
 Treat each feature as a chain:
 1. Database schema in `db/<feature>.schema.ts`.
-2. Backend service access in `server-config/db.ts` and/or `server-config/auth.ts`.
+2. Backend service access in `backend/config/db.ts` and/or `backend/config/auth.ts`.
 3. API route handlers in `app/api/<feature>/*/route.ts`.
 4. Typed API client in `lib/eden.ts`.
 5. Page and UI interaction in `app/<route>/page.tsx`.
 
 For example, the todo feature flows as:
-- `db/todo.schema.ts` → `server-config/db.ts` → `app/api/todos/[[...slugs]]/route.ts` → `lib/eden.ts` → `app/dashboard/page.tsx`
+- `db/todo.schema.ts` → `backend/config/db.ts` → `app/api/todos/[[...slugs]]/route.ts` → `lib/eden.ts` → `app/dashboard/page.tsx`
 
 ## What this skill should do
 
 When asked to modify or extend the app, prefer:
 - App Router pages and route files under `app/`.
 - `db/` schema changes for data model updates.
-- `server-config/` for runtime auth and DB config.
+- `backend/config/` for runtime auth and DB config.
 - `lib/eden.ts` for typed API access, with `api` and `todos` clients based on the Elysia app shape.
 - `components/ui/` for shared UI primitives.
 - `components/providers.tsx` for shared provider behavior.
@@ -90,4 +90,4 @@ When asked to add or update a feature:
 
 ## Skill summary
 
-This skill understands the repository as a Next.js 16 App Router application with Elysia-based API routes, a Drizzle-backed database layer, `better-auth` auth, and React Query hydration. It knows to treat `db/`, `server-config/`, `lib/`, `components/`, and `app/` as distinct layers and to favor explicit feature flow over catch-all routing.
+This skill understands the repository as a Next.js 16 App Router application with Elysia-based API routes, a Drizzle-backed database layer, `better-auth` auth, and React Query hydration. It knows to treat `db/`, `backend/config/`, `lib/`, `components/`, and `app/` as distinct layers and to favor explicit feature flow over catch-all routing.

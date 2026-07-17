@@ -19,7 +19,11 @@ import { useMutation } from "@tanstack/react-query"
 export default function Login() {
   const router = useRouter()
   const t = useTranslations("LoginPage")
-  const { mutateAsync, error, isPending } = useMutation({
+  const {
+    mutateAsync: signInEmailAsync,
+    error: loginError,
+    isPending: isLoginPending,
+  } = useMutation({
     mutationFn: async (formData: FormData) => {
       const { email, password } = Object.fromEntries(formData) as {
         email: string
@@ -41,10 +45,36 @@ export default function Login() {
     },
   })
 
-  const handleLogin: React.SubmitEventHandler<HTMLFormElement> = async (event) => {
+  const {
+    mutateAsync: signInGuestAsync,
+    error: guestError,
+    isPending: isGuestPending,
+  } = useMutation({
+    mutationFn: async () => {
+      const { error } = await authClient.signIn.anonymous()
+
+      if (error) {
+        throw new Error(error.message)
+      }
+    },
+    onSuccess: () => {
+      router.push("/dashboard")
+    },
+  })
+
+  const error = loginError ?? guestError
+  const isPending = isLoginPending || isGuestPending
+
+  const handleLogin: React.SubmitEventHandler<HTMLFormElement> = async (
+    event
+  ) => {
     event.preventDefault()
     const formData = new FormData(event.currentTarget)
-    await mutateAsync(formData)
+    await signInEmailAsync(formData)
+  }
+
+  const handleGuestLogin = async () => {
+    await signInGuestAsync()
   }
 
   return (
@@ -55,7 +85,7 @@ export default function Login() {
             <span className="inline-flex rounded-full bg-sky-100 px-4 py-2 text-sm font-semibold text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
               {t("welcomeBadge")}
             </span>
-            <h1 className="mt-6 text-4xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-5xl">
+            <h1 className="mt-6 text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl dark:text-white">
               {t("pageTitle")}
             </h1>
             <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 dark:text-slate-300">
@@ -66,14 +96,14 @@ export default function Login() {
           <div className="rounded-4xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
             <div className="mb-6 flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">
+                <p className="text-sm font-semibold tracking-[0.24em] text-slate-500 uppercase dark:text-slate-400">
                   {t("secureAccessTitle")}
                 </p>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                   {t("secureAccessDescription")}
                 </p>
               </div>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.20em] text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold tracking-[0.20em] text-slate-700 uppercase dark:bg-slate-800 dark:text-slate-200">
                 Fast login
               </span>
             </div>
@@ -99,17 +129,31 @@ export default function Login() {
                   required
                 />
               </div>
-              {error && (
-                <p className="text-sm text-red-500">{error.message}</p>
-              )}
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? t("signingIn") : t("signIn")}
-              </Button>
+              {error && <p className="text-sm text-red-500">{error.message}</p>}
+              <div className="grid gap-3">
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? t("signingIn") : t("signIn")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  disabled={isPending}
+                  onClick={handleGuestLogin}
+                >
+                  {isGuestPending
+                    ? t("continuingAsGuest")
+                    : t("continueAsGuest")}
+                </Button>
+              </div>
             </form>
 
             <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-              {t("noAccount")}{' '}
-              <Link href="/sign-up" className="font-medium text-slate-950 underline decoration-slate-400 underline-offset-4 dark:text-white">
+              {t("noAccount")}{" "}
+              <Link
+                href="/sign-up"
+                className="font-medium text-slate-950 underline decoration-slate-400 underline-offset-4 dark:text-white"
+              >
                 {t("createOne")}
               </Link>
             </p>
@@ -122,15 +166,13 @@ export default function Login() {
             {t("whyDescription")}
           </p>
           <div className="mt-8 space-y-5">
-            {[
-              t("benefitAuth"),
-              t("benefitTodo"),
-              t("benefitLaunch"),
-            ].map((item) => (
-              <div key={item} className="rounded-3xl bg-slate-800/70 p-5">
-                <p className="text-sm leading-6 text-slate-200">{item}</p>
-              </div>
-            ))}
+            {[t("benefitAuth"), t("benefitTodo"), t("benefitLaunch")].map(
+              (item) => (
+                <div key={item} className="rounded-3xl bg-slate-800/70 p-5">
+                  <p className="text-sm leading-6 text-slate-200">{item}</p>
+                </div>
+              )
+            )}
           </div>
         </div>
       </div>

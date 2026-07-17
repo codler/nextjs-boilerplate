@@ -1,8 +1,8 @@
-import { auth } from "@/server-config/auth"
+import { auth } from "@/backend/config/auth"
 import { getRequestConfig } from "next-intl/server"
 import { headers } from "next/headers"
-import en from "../messages/en.json"
-import sv from "../messages/sv.json"
+import en from "../../messages/en.json"
+import sv from "../../messages/sv.json"
 
 const messages = {
   en,

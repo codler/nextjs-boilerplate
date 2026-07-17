@@ -1,4 +1,4 @@
-import { auth } from "@/server-config/auth"
+import { auth } from "@/backend/config/auth"
 import Elysia from "elysia"
 
 export const authMiddleware = new Elysia({ name: "better-auth" })

@@ -1,7 +1,7 @@
 import { treaty } from "@elysia/eden"
-import type { ApiElysia } from "../app/api/[[...slugs]]/route"
+import type { ApiElysia } from "@/backend"
 
 export const api =
   typeof window === "undefined"
-    ? treaty((await import("../app/api/[[...slugs]]/route")).app).api
+    ? treaty((await import("@/backend")).app).api
     : treaty<ApiElysia>(process.env.NEXT_PUBLIC_API_URL!).api

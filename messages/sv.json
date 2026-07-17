@@ -45,6 +45,8 @@
     "passwordPlaceholder": "Ange ditt lösenord",
     "signIn": "Logga in",
     "signingIn": "Loggar in…",
+    "continueAsGuest": "Fortsätt som gäst",
+    "continuingAsGuest": "Fortsätter som gäst…",
     "noAccount": "Har du inget konto?",
     "createOne": "Skapa ett",
     "whyTitle": "Varför MySite?",

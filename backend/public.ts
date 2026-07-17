@@ -1,6 +1,6 @@
-import { Elysia, t } from "elysia"
+import { Elysia } from "elysia"
 import { sql } from "drizzle-orm"
-import { db } from "@/server-config/db"
+import { db } from "@/backend/config/db"
 import { todo } from "@/db/todo.schema"
 
 export const publicElysia = new Elysia({ prefix: "/public" }).get(

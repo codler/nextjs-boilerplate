@@ -45,6 +45,8 @@
     "passwordPlaceholder": "Enter your password",
     "signIn": "Sign in",
     "signingIn": "Signing in…",
+    "continueAsGuest": "Continue as guest",
+    "continuingAsGuest": "Continuing as guest…",
     "noAccount": "Don't have an account?",
     "createOne": "Create one",
     "whyTitle": "Why MySite?",

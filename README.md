@@ -16,7 +16,7 @@ A modern Next.js starter using:
 - `app/layout.tsx` — root layout with providers
 - `app/api/` — Elysia route handlers
 - `db/` — Drizzle database schema definitions
-- `server-config/` — runtime database/auth configuration
+- `backend/config/` — runtime database/auth configuration
 - `lib/` — shared utilities and typed API client wrappers
 - `components/` — shared UI primitives and providers
 - `proxy.ts` — route protection in Next.js 16 middleware-style flow

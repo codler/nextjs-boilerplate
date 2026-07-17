@@ -5,5 +5,5 @@ const nextConfig: NextConfig = {
   output: "standalone",
 }
 
-const withNextIntl = createNextIntlPlugin("./server-config/i18n-request.ts")
+const withNextIntl = createNextIntlPlugin("./backend/config/i18n-request.ts")
 export default withNextIntl(nextConfig)
