@@ -10,7 +10,13 @@ export const authMiddleware = new Elysia({ name: "better-auth" })
           headers: await import("next/headers").then((mod) => mod.headers()),
         })
 
-        if (!session) return status(401)
+        if (!session)
+          return status(401, {
+            error: {
+              code: "UNAUTHENTICATED",
+              message: "You must be logged in to access this resource.",
+            },
+          })
 
         return {
           user: session.user,

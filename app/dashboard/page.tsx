@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/authClient"
+import { getHttpErrorMessage } from "@/lib/error"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 import { useTranslations } from "next-intl"
@@ -20,7 +21,7 @@ export default function DashboardPage() {
     mutationFn: async (text: string) => {
       const { error } = await api.todos.post({ text })
       if (error) {
-        toast.error("Error")
+        toast.error(getHttpErrorMessage(error))
       }
     },
     onSuccess: () =>
@@ -31,7 +32,7 @@ export default function DashboardPage() {
     mutationFn: async (id: string) => {
       const { error } = await api.todos.toggle({ id }).patch()
       if (error) {
-        toast.error("Error")
+        toast.error(getHttpErrorMessage(error))
       }
     },
     onSuccess: () =>
@@ -42,7 +43,7 @@ export default function DashboardPage() {
     mutationFn: async (id: string) => {
       const { error } = await api.todos({ id }).delete()
       if (error) {
-        toast.error("Error")
+        toast.error(getHttpErrorMessage(error))
       }
     },
     onSuccess: () =>

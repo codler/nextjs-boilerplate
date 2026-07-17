@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -19,6 +20,14 @@ import { useMutation } from "@tanstack/react-query"
 export default function Login() {
   const router = useRouter()
   const t = useTranslations("LoginPage")
+  const { data: session } = authClient.useSession()
+
+  useEffect(() => {
+    if (session) {
+      router.replace("/dashboard")
+    }
+  }, [router, session])
+
   const {
     mutateAsync: signInEmailAsync,
     error: loginError,
@@ -62,7 +71,6 @@ export default function Login() {
     },
   })
 
-  const error = loginError ?? guestError
   const isPending = isLoginPending || isGuestPending
 
   const handleLogin: React.SubmitEventHandler<HTMLFormElement> = async (
@@ -74,6 +82,11 @@ export default function Login() {
   }
 
   const handleGuestLogin = async () => {
+    if (session) {
+      router.push("/dashboard")
+      return
+    }
+
     await signInGuestAsync()
   }
 
@@ -129,21 +142,12 @@ export default function Login() {
                   required
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error.message}</p>}
+              {loginError && (
+                <p className="text-sm text-red-500">{loginError.message}</p>
+              )}
               <div className="grid gap-3">
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? t("signingIn") : t("signIn")}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  disabled={isPending}
-                  onClick={handleGuestLogin}
-                >
-                  {isGuestPending
-                    ? t("continuingAsGuest")
-                    : t("continueAsGuest")}
                 </Button>
               </div>
             </form>
@@ -157,6 +161,29 @@ export default function Login() {
                 {t("createOne")}
               </Link>
             </p>
+          </div>
+
+          <div className="rounded-4xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
+            <div className="mb-6">
+              <p className="text-sm font-semibold tracking-[0.24em] text-slate-500 uppercase dark:text-slate-400">
+                {t("demoAccessTitle")}
+              </p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                {t("demoAccessDescription")}
+              </p>
+            </div>
+            {guestError && (
+              <p className="mb-4 text-sm text-red-500">{guestError.message}</p>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              disabled={isPending}
+              onClick={handleGuestLogin}
+            >
+              {isGuestPending ? t("demoButtonLoading") : t("demoButton")}
+            </Button>
           </div>
         </div>
 

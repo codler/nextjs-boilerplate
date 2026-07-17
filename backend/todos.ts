@@ -7,6 +7,7 @@ import {
   toggleTodoCompleted,
   deleteTodo,
 } from "@/backend/services/todo.service"
+import { handleHttpError } from "@/backend/error"
 
 export const todosElysia = new Elysia({ prefix: "/todos" })
   .use(authMiddleware)
@@ -22,7 +23,11 @@ export const todosElysia = new Elysia({ prefix: "/todos" })
   .get(
     "/:id",
     async ({ params, user }) => {
-      return await getTodoById(user.id, params.id)
+      try {
+        return await getTodoById(user.id, params.id)
+      } catch (error) {
+        return handleHttpError(error)
+      }
     },
     { auth: true }
   )
@@ -44,7 +49,11 @@ export const todosElysia = new Elysia({ prefix: "/todos" })
   .patch(
     "/toggle/:id",
     async ({ params, user }) => {
-      return await toggleTodoCompleted(user.id, params.id)
+      try {
+        return await toggleTodoCompleted(user.id, params.id)
+      } catch (error) {
+        return handleHttpError(error)
+      }
     },
     { auth: true }
   )
@@ -52,7 +61,12 @@ export const todosElysia = new Elysia({ prefix: "/todos" })
   .delete(
     "/:id",
     async ({ params, user }) => {
-      return await deleteTodo(user.id, params.id)
+      try {
+        await deleteTodo(user.id, params.id)
+        return { success: true }
+      } catch (error) {
+        return handleHttpError(error)
+      }
     },
     { auth: true }
   )

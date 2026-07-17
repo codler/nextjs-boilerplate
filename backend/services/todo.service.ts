@@ -1,17 +1,24 @@
-import { and, desc, eq, sql } from "drizzle-orm"
+import { desc, eq, sql } from "drizzle-orm"
 import { db } from "@/backend/config/db"
 import { todo } from "@/db/todo.schema"
+import { ForbiddenError, NotFoundError } from "@/backend/error"
 
 export async function getTodos() {
   return await db.select().from(todo).orderBy(desc(todo.createdAt))
 }
 
 export async function getTodoById(userId: string, id: string) {
-  return await db
-    .select()
-    .from(todo)
-    .where(and(eq(todo.userId, userId), eq(todo.id, id)))
-    .orderBy(desc(todo.createdAt))
+  const [existing] = await db.select().from(todo).where(eq(todo.id, id))
+
+  if (!existing) {
+    throw new NotFoundError("Todo not found")
+  }
+
+  if (existing.userId !== userId) {
+    throw new ForbiddenError()
+  }
+
+  return existing
 }
 
 export async function createTodo(userId: string, text: string) {
@@ -21,17 +28,22 @@ export async function createTodo(userId: string, text: string) {
 }
 
 export async function toggleTodoCompleted(userId: string, id: string) {
+  await getTodoById(userId, id)
+
   const [updated] = await db
     .update(todo)
     .set({ completed: sql`NOT ${todo.completed}` })
-    .where(and(eq(todo.userId, userId), eq(todo.id, id)))
+    .where(eq(todo.id, id))
     .returning()
+
+  if (!updated) {
+    throw new NotFoundError("Todo not found")
+  }
 
   return updated
 }
 
 export async function deleteTodo(userId: string, id: string) {
-  await db.delete(todo).where(and(eq(todo.userId, userId), eq(todo.id, id)))
-
-  return { success: true }
+  await getTodoById(userId, id)
+  await db.delete(todo).where(eq(todo.id, id))
 }
