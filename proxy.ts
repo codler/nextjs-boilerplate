@@ -13,9 +13,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(RoutePath.LOGIN, request.url))
   }
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  let session: Awaited<ReturnType<typeof auth.api.getSession>> | undefined
+  try {
+    session = await auth.api.getSession({
+      headers: await headers(),
+    })
+  } catch (error) {
+    console.error("Error fetching session:", error)
+  }
 
   if (!session) {
     return NextResponse.redirect(new URL(RoutePath.LOGIN, request.url))

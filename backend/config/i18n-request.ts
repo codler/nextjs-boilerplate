@@ -51,9 +51,15 @@ export default getRequestConfig(
   async ({ locale = "en" as keyof typeof messages }) => {
     const requestHeaders = await headers()
     const acceptLanguage = requestHeaders.get("accept-language") ?? undefined
-    const session = await auth.api.getSession({
-      headers: requestHeaders,
-    })
+
+    let session: Awaited<ReturnType<typeof auth.api.getSession>> | undefined
+    try {
+      session = await auth.api.getSession({
+        headers: requestHeaders,
+      })
+    } catch (error) {
+      console.error("Error fetching session:", error)
+    }
 
     const preferredLocale = getPreferredLocale(acceptLanguage)
     if (preferredLocale) {

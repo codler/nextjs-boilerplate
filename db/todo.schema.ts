@@ -1,25 +1,25 @@
-import { relations } from "drizzle-orm"
-import { pgTable, uuid, text, boolean, timestamp } from "drizzle-orm/pg-core"
+import { defineRelations } from "drizzle-orm"
+import { pgTable, uuid, text, boolean } from "drizzle-orm/pg-core"
 import { user } from "./auth.schema"
+import { timestamps } from "./schemaHelper"
 
 export const todo = pgTable("todo", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  text: text("text").notNull(),
-  completed: boolean("completed").notNull().default(false),
-  createdAt: timestamp("created_at", {
-    withTimezone: true,
-  })
-    .notNull()
-    .defaultNow(),
+  id: uuid().defaultRandom().primaryKey(),
+  text: text().notNull(),
+  completed: boolean().notNull().default(false),
 
-  userId: text("userId")
+  ...timestamps(),
+
+  userId: text()
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 })
 
-export const todoRelations = relations(todo, ({ one }) => ({
-  user: one(user, {
-    fields: [todo.userId],
-    references: [user.id],
-  }),
+export const relations = defineRelations({ todo, user }, (r) => ({
+  todo: {
+    user: r.one.user({
+      from: r.todo.userId,
+      to: r.user.id,
+    }),
+  },
 }))

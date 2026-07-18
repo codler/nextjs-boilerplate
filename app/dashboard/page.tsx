@@ -17,7 +17,8 @@ export default function DashboardPage() {
   const t = useTranslations("DashboardPage")
   const { data: session } = authClient.useSession()
   const queryClient = useQueryClient()
-  const { data } = useTodosQuery()
+  const { data, error } = useTodosQuery()
+  const todos = data ?? []
 
   const createMutation = useMutation({
     mutationFn: async (text: string) => {
@@ -109,7 +110,7 @@ export default function DashboardPage() {
               {t("totalTasks")}
             </p>
             <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">
-              {data.length}
+              {error ? "-" : todos.length}
             </p>
           </div>
           <div className="rounded-3xl bg-slate-50 p-6 dark:bg-slate-900">
@@ -117,11 +118,21 @@ export default function DashboardPage() {
               {t("completed")}
             </p>
             <p className="mt-3 text-3xl font-semibold text-slate-950 dark:text-white">
-              {data.filter((todo) => todo.completed).length}
+              {error ? "-" : todos.filter((todo) => todo.completed).length}
             </p>
           </div>
         </div>
       </div>
+
+      {error ? (
+        <div className="rounded-4xl border border-red-200 bg-red-50 p-6 text-sm text-red-700 shadow-sm dark:border-red-800 dark:bg-red-950/20 dark:text-red-300">
+          <p className="font-semibold">{t("errorTitle")}</p>
+          <p className="mt-2">{error}</p>
+          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+            {t("errorAdvice")}
+          </p>
+        </div>
+      ) : null}
 
       <section className="grid gap-10 xl:grid-cols-[0.7fr_0.3fr]">
         <div className="space-y-6">
@@ -168,17 +179,22 @@ export default function DashboardPage() {
                 </p>
               </div>
               <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold tracking-[0.24em] text-slate-700 uppercase dark:bg-slate-800 dark:text-slate-200">
-                {t("todoCount", { count: data.length })}
+                {error ? "—" : t("todoCount", { count: todos.length })}
               </span>
             </div>
 
             <div className="mt-6 space-y-4">
-              {data.length === 0 ? (
+              {error ? (
+                <div className="rounded-3xl border border-red-200 bg-red-50 px-6 py-8 text-center text-sm text-red-700 dark:border-red-800 dark:bg-red-950/20 dark:text-red-300">
+                  <p className="font-semibold">{t("errorTitle")}</p>
+                  <p className="mt-2">{error}</p>
+                </div>
+              ) : todos.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-slate-200 bg-slate-50 px-6 py-8 text-center text-sm text-slate-500 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
                   {t("noTodos")}
                 </div>
               ) : (
-                data.map((todo) => (
+                todos.map((todo) => (
                   <div
                     key={todo.id}
                     className="rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900"

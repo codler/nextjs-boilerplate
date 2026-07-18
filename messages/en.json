@@ -113,6 +113,8 @@
     "tipsTitle": "Tips",
     "tipOne": "Keep todo descriptions concise.",
     "tipTwo": "Use complete/active to track progress.",
-    "tipThree": "Logout when you're done."
+    "tipThree": "Logout when you're done.",
+    "errorTitle": "Something went wrong",
+    "errorAdvice": "Please try again or refresh the page."
   }
 }

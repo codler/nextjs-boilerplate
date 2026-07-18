@@ -45,7 +45,7 @@ export default function SignUp() {
       })
 
       if (error) {
-        throw new Error(error.message)
+        throw new Error(error.message ?? "Something went wrong")
       }
 
       return null

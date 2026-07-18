@@ -113,6 +113,8 @@
     "tipsTitle": "Tips",
     "tipOne": "Håll todo-beskrivningarna korta.",
     "tipTwo": "Använd slutförd/aktiv för att följa framsteg.",
-    "tipThree": "Logga ut när du är klar."
+    "tipThree": "Logga ut när du är klar.",
+    "errorTitle": "Något gick fel",
+    "errorAdvice": "Försök igen eller uppdatera sidan."
   }
 }

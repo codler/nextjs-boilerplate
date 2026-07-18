@@ -7,7 +7,7 @@ export const getHttpErrorMessage = <
 >(
   error: T | null | undefined
 ) => {
-  if (!error) return "Error"
+  if (!error) return undefined
 
   const message =
     typeof error.value === "object" && error.value !== null

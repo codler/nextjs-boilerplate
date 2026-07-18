@@ -47,7 +47,7 @@ export default function Login() {
       })
 
       if (error) {
-        throw new Error(error.message)
+        throw new Error(error.message ?? "Something went wrong")
       }
     },
     onSuccess: () => {
@@ -64,7 +64,7 @@ export default function Login() {
       const { error } = await authClient.signIn.anonymous()
 
       if (error) {
-        throw new Error(error.message)
+        throw new Error(error.message ?? "Something went wrong")
       }
     },
     onSuccess: () => {

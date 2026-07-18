@@ -1,7 +1,12 @@
 import { desc, eq, sql } from "drizzle-orm"
 import { db } from "@/backend/config/db"
 import { todo } from "@/db/todo.schema"
-import { ForbiddenError, NotFoundError } from "@/backend/error"
+import {
+  ForbiddenError,
+  HttpError,
+  InternalServerError,
+  NotFoundError,
+} from "@/backend/error"
 
 export async function getTodos() {
   return await db.select().from(todo).orderBy(desc(todo.createdAt))
@@ -22,9 +27,16 @@ export async function getTodoById(userId: string, id: string) {
 }
 
 export async function createTodo(userId: string, text: string) {
-  const [inserted] = await db.insert(todo).values({ userId, text }).returning()
-
-  return inserted
+  try {
+    const [inserted] = await db
+      .insert(todo)
+      .values({ userId, text })
+      .returning()
+    return inserted
+  } catch (error) {
+    console.error("createTodo failed:", error)
+    throw new InternalServerError("Unable to create todo")
+  }
 }
 
 export async function toggleTodoCompleted(userId: string, id: string) {
