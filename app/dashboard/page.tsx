@@ -164,7 +164,11 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 todos.map((todo) => (
-                  <DashboardTodoItem key={todo.id} todo={todo} />
+                  <DashboardTodoItem
+                    key={todo.id}
+                    todo={todo}
+                    currentUserId={session?.user.id}
+                  />
                 ))
               )}
             </div>

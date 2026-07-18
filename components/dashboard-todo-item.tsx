@@ -8,17 +8,17 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { toast } from "sonner"
 import { todosQueryKey } from "@/hooks/useTodosQuery"
+import type { Treaty } from "@elysia/eden"
 
 interface DashboardTodoItemProps {
-  todo: {
-    id: string
-    text: string
-    completed: boolean
-    userId: string
-  }
+  todo: Treaty.Data<typeof api.todos.get>[number]
+  currentUserId?: string
 }
 
-export function DashboardTodoItem({ todo }: DashboardTodoItemProps) {
+export function DashboardTodoItem({
+  todo,
+  currentUserId,
+}: DashboardTodoItemProps) {
   const t = useTranslations("DashboardPage")
   const queryClient = useQueryClient()
 
@@ -54,9 +54,14 @@ export function DashboardTodoItem({ todo }: DashboardTodoItemProps) {
     await deleteMutation.mutateAsync()
   }
 
+  const ownerLabel =
+    todo.userId === currentUserId
+      ? t("ownedByYou")
+      : t("ownedBy", { owner: todo.userId })
+
   const { openConfirmDeleteDialog, confirmDeleteDialog } =
     useConfirmDeleteDialog({
-      title: t("confirmDeleteTitle"),
+      title: t("confirmDeleteTitleWithItem", { item: todo.text }),
       description: t("confirmDeleteDescriptionWithItem", {
         item: todo.text,
       }),
@@ -80,7 +85,7 @@ export function DashboardTodoItem({ todo }: DashboardTodoItemProps) {
               {todo.text}
             </p>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              {t("ownedBy", { owner: todo.userId })}
+              {ownerLabel}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -89,8 +94,13 @@ export function DashboardTodoItem({ todo }: DashboardTodoItemProps) {
               variant={todo.completed ? "outline" : "secondary"}
               onClick={async () => await toggleMutation.mutateAsync()}
               disabled={toggleMutation.isPending}
+              aria-busy={toggleMutation.isPending}
             >
-              {todo.completed ? t("markActive") : t("complete")}
+              {toggleMutation.isPending
+                ? t("updating")
+                : todo.completed
+                  ? t("markActive")
+                  : t("complete")}
             </Button>
             <Button
               size="sm"
@@ -101,8 +111,9 @@ export function DashboardTodoItem({ todo }: DashboardTodoItemProps) {
                 })
               }
               disabled={deleteMutation.isPending}
+              aria-busy={deleteMutation.isPending}
             >
-              {t("delete")}
+              {deleteMutation.isPending ? t("deleting") : t("delete")}
             </Button>
           </div>
         </div>
