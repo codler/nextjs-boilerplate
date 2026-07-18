@@ -105,6 +105,7 @@
     "delete": "Ta bort",
     "confirmDeleteTitle": "Ta bort uppgift?",
     "confirmDeleteDescription": "Är du säker på att du vill ta bort den här uppgiften? Denna åtgärd kan inte ångras.",
+    "confirmDeleteDescriptionWithItem": "Är du säker på att du vill ta ta bort uppgiften {item}? Denna åtgärd kan inte ångras.",
     "confirmDeleteAction": "Ta bort",
     "confirmDeleteCancel": "Avbryt",
     "ownedBy": "Ägs av {owner}",

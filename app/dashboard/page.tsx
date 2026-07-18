@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { useConfirmDeleteDialog } from "@/components/confirm-delete-alert-dialog"
 import { authClient } from "@/lib/authClient"
 import { getHttpErrorMessage } from "@/lib/error"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -11,6 +10,7 @@ import { todosQueryKey, useTodosQuery } from "@/hooks/useTodosQuery"
 import { toast } from "sonner"
 import { api } from "@/lib/api"
 import { RoutePath } from "@/constants/route"
+import { DashboardTodoItem } from "@/components/dashboard-todo-item"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -31,28 +31,6 @@ export default function DashboardPage() {
       queryClient.invalidateQueries({ queryKey: todosQueryKey() }),
   })
 
-  const toggleMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await api.todos.toggle({ id }).patch()
-      if (error) {
-        toast.error(getHttpErrorMessage(error))
-      }
-    },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: todosQueryKey() }),
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await api.todos({ id }).delete()
-      if (error) {
-        toast.error(getHttpErrorMessage(error))
-      }
-    },
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: todosQueryKey() }),
-  })
-
   const onLogout = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -62,15 +40,6 @@ export default function DashboardPage() {
       },
     })
   }
-
-  const { openConfirmDeleteDialog, confirmDeleteDialog } =
-    useConfirmDeleteDialog({
-      title: t("confirmDeleteTitle"),
-      description: t("confirmDeleteDescription"),
-      confirmText: t("confirmDeleteAction"),
-      cancelText: t("confirmDeleteCancel"),
-      confirmButtonVariant: "destructive",
-    })
 
   const handleCreateTodo: React.SubmitEventHandler<HTMLFormElement> = async (
     event
@@ -195,49 +164,7 @@ export default function DashboardPage() {
                 </div>
               ) : (
                 todos.map((todo) => (
-                  <div
-                    key={todo.id}
-                    className="rounded-3xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900"
-                  >
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <p
-                          className={`text-base font-medium ${todo.completed ? "text-slate-400 line-through" : "text-slate-950 dark:text-white"}`}
-                        >
-                          {todo.text}
-                        </p>
-                        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                          {t("ownedBy", { owner: todo.userId })}
-                        </p>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Button
-                          size="sm"
-                          variant={todo.completed ? "outline" : "secondary"}
-                          onClick={async () =>
-                            await toggleMutation.mutateAsync(todo.id)
-                          }
-                          disabled={toggleMutation.isPending}
-                        >
-                          {todo.completed ? t("markActive") : t("complete")}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() =>
-                            openConfirmDeleteDialog({
-                              onConfirm: async () => {
-                                await deleteMutation.mutateAsync(todo.id)
-                              },
-                            })
-                          }
-                          disabled={deleteMutation.isPending}
-                        >
-                          {t("delete")}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                  <DashboardTodoItem key={todo.id} todo={todo} />
                 ))
               )}
             </div>
@@ -265,8 +192,6 @@ export default function DashboardPage() {
           </div>
         </aside>
       </section>
-
-      {confirmDeleteDialog}
     </div>
   )
 }

@@ -3,7 +3,6 @@ import { db } from "@/backend/config/db"
 import { todo } from "@/db/todo.schema"
 import {
   ForbiddenError,
-  HttpError,
   InternalServerError,
   NotFoundError,
 } from "@/backend/error"
